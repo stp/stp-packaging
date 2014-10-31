@@ -1,0 +1,39 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+    NUMJOBS = $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+    MAKEFLAGS += -j$(NUMJOBS)
+endif
+
+
+# It is possible to override none of these targets and
+# the dh_* targets will do the right thing but I want to
+# set the configuration variables explicitly so we can conveniently
+# change them later.
+
+override_dh_auto_configure:
+	mkdir -p build
+	cd build && cmake -DENABLE_TESTING=OFF \
+        -DENABLE_PYTHON_INTERFACE=ON \
+        -DBUILD_SHARED_LIBS=ON \
+        -DALSO_BUILD_STATIC_LIB=ON \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DENABLE_ASSERTIONS=ON \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        ../
+
+override_dh_auto_build:
+	cd build && $(MAKE)
+
+override_dh_auto_install:
+	cd build && $(MAKE) DESTDIR=$(CURDIR)/debian/stp/usr install
+
+%:
+	dh $@ 

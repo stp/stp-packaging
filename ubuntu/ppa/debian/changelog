@@ -1,0 +1,17 @@
+stp (1.0+1SNAPSHOT20141031-2~trusty1) trusty; urgency=low
+
+  * Fix missing python standard library dependency
+
+ -- Dan Liew <delcypher@gmail.com>  Fri, 31 Oct 2014 01:47:30 +0000
+
+stp (1.0+1SNAPSHOT20141031-1~trusty1) trusty; urgency=low
+
+  * Added missing python dependency
+
+ -- Dan Liew <delcypher@gmail.com>  Fri, 31 Oct 2014 01:40:56 +0000
+
+stp (1.0+1SNAPSHOT20141031-0~trusty1) trusty; urgency=low
+
+  * Initial PPA release
+
+ -- Dan Liew <delcypher@gmail.com>  Fri, 31 Oct 2014 01:29:04 +0000
