@@ -1,3 +1,9 @@
+stp (1.0+1SNAPSHOT20141031-3~trusty1) trusty; urgency=low
+
+  * Fix installation location (had one extra ``/usr/`` in path)
+
+ -- Dan Liew <delcypher@gmail.com>  Fri, 31 Oct 2014 02:15:55 +0000
+
 stp (1.0+1SNAPSHOT20141031-2~trusty1) trusty; urgency=low
 
   * Fix missing python standard library dependency

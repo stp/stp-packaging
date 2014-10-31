@@ -33,7 +33,7 @@ override_dh_auto_build:
 	cd build && $(MAKE)
 
 override_dh_auto_install:
-	cd build && $(MAKE) DESTDIR=$(CURDIR)/debian/stp/usr install
+	cd build && $(MAKE) DESTDIR=$(CURDIR)/debian/stp install
 
 %:
 	dh $@ 
