@@ -41,3 +41,4 @@ you out
 * https://help.launchpad.net/Packaging/PPA/BuildingASourcePackage
 * http://debian-handbook.info/browse/stable/sect.building-first-package.html
 * http://packaging.ubuntu.com/html/
+* https://wiki.debian.org/UpstreamGuide
