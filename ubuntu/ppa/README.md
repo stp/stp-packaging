@@ -13,8 +13,8 @@ for packages intended for use on [STP's Ubuntu PPA](https://launchpad.net/~simpl
    ```
 1. Nagivate to your STP git repository and check that the files in
    ``debian/`` look correct. In particular make sure ``debian/changelog``
-   is correct because the script adds a new entry into the changelog for the new
-   snapshot.
+   is correct because the script generates a new changelog ( it can also
+   append a new entry into the changelog for the new snapshot).
    
    Note snapshots have the date (YYYYMMDD) is their name so if you need to
    upload another package on the same day you should increment the number after

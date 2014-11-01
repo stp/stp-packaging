@@ -2,7 +2,7 @@ Source: stp
 Section: math
 Priority: optional
 Maintainer: Dan Liew <delcypher@gmail.com>
-Build-Depends: debhelper (>= 8.0.0), cmake (>= 2.8.8), libboost-program-options-dev, libboost-system-dev, bison, flex, perl-base, make, python-minimal, libpython-stdlib
+Build-Depends: debhelper (>= 8.0.0), cmake (>= 2.8.8), libboost-program-options-dev, libboost-system-dev, bison, flex, perl-base, make, python
 Standards-Version: 3.9.4
 Homepage: https://stp.github.io/stp
 Vcs-Git: git://github.com/stp/stp.git
