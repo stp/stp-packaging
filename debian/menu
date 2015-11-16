@@ -1,0 +1,2 @@
+?package(stp):needs="text" section="Applications/Science/Mathematics"\
+  title="stp" command="/usr/bin/stp"

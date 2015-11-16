@@ -1,0 +1,7 @@
+debian/tmp/usr/bin/
+debian/tmp/usr/include/
+debian/tmp/usr/lib/libstp.so.2.1.1
+debian/tmp/usr/lib/cmake/
+debian/tmp/usr/lib/libstp.a
+debian/tmp/usr/lib/libstp.so.2.1
+debian/tmp/usr/lib/libstp.so

@@ -1,0 +1,309 @@
+Executables reorganized: removed stp_simple, removed a symlink in usr/bin/
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,4 +1,8 @@
+-# AUTHORS: Dan Liew, Ryan Gvostes, Mate Soos
++# Copyright (c)
++#     2015 Dan Liew
++#     2015 Ryan Gvostes
++#     2015 Mate Soos
++#     2015 Marko Dimjašević
+ #
+ # Permission is hereby granted, free of charge, to any person obtaining a copy
+ # of this software and associated documentation files (the "Software"), to deal
+@@ -305,6 +309,14 @@
+ # Find the Boost package components
+ # -----------------------------------------------------------------------------
+ 
++find_package( Boost 1.46 COMPONENTS program_options)
++if (NOT Boost_FOUND)
++  message(FATAL_ERROR "You must install the Boost program_options library")
++else()
++  message(STATUS "OK, found the Boost program_options library")
++endif()
++include_directories(${Boost_INCLUDE_DIRS})
++
+ if(NOT BUILD_SHARED_LIBS)
+   message("Trying to use static Boost and Minisat libraries")
+   set(Boost_USE_STATIC_LIBS ON)
+@@ -312,17 +324,6 @@
+   set(CryptoMiniSat_USE_STATIC_LIBS ON)
+ endif()
+ 
+-option(NO_BOOST "Don't try to use boost" OFF)
+-if (NOT NO_BOOST)
+-  find_package( Boost 1.46 COMPONENTS program_options)
+-endif()
+-if(NOT Boost_FOUND)
+-  message(STATUS "Only building executable with few command-line options because the boost program_options library were not available")
+-else()
+-  include_directories(${Boost_INCLUDE_DIRS})
+-endif()
+-
+-
+ # -----------------------------------------------------------------------------
+ # Find CryptoMiniSat4
+ # -----------------------------------------------------------------------------
+@@ -442,11 +443,7 @@
+ 
+ # Export targets
+ if (Boost_FOUND)
+-  export(TARGETS stp stp_simple ${STP_SHARED_LIBRARY} ${STP_STATIC_LIBRARY}
+-    FILE "${PROJECT_BINARY_DIR}/${STP_TARGETS_FILENAME}"
+-  )
+-else()
+-  export(TARGETS stp_simple ${STP_SHARED_LIBRARY} ${STP_STATIC_LIBRARY}
++  export(TARGETS stp ${STP_SHARED_LIBRARY} ${STP_STATIC_LIBRARY}
+     FILE "${PROJECT_BINARY_DIR}/${STP_TARGETS_FILENAME}"
+   )
+ endif()
+--- a/LICENSE
++++ b/LICENSE
+@@ -8,6 +8,7 @@
+     2011 - 2013 Khoo Yit Phang
+     2005 - 2015 David L. Dill
+     2009 - 2015 Mate Soos
++           2015 Marko Dimjašević
+ 
+ Permission is hereby granted, free of charge, to any person obtaining
+ a copy of this software and associated documentation files (the
+@@ -38,4 +39,4 @@
+     * Windows msc99hdr -- Copyright (c) 2006-2008 Alexander Chemeris
+         Copyright (c) 2000 Jeroen Ruigrok van der Werven <asmodai@FreeBSD.org>
+ 
+-For licenses of these SW packages, please see LICENSE_COMPONENTS
+\ No newline at end of file
++For licenses of these SW packages, please see LICENSE_COMPONENTS
+--- a/tests/query-files/CMakeLists.txt
++++ b/tests/query-files/CMakeLists.txt
+@@ -1,4 +1,8 @@
+-# AUTHORS: Dan Liew, Ryan Gvostes, Mate Soos
++# Copyright (c)
++#            2015 Dan Liew
++#            2015 Ryan Gvostes
++#     2014 - 2015 Mate Soos
++#            2015 Marko Dimjašević
+ #
+ # Permission is hereby granted, free of charge, to any person obtaining a copy
+ # of this software and associated documentation files (the "Software"), to deal
+@@ -18,28 +22,16 @@
+ # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ # THE SOFTWARE.
+ 
+-if (Boost_FOUND)
+-    get_target_property(STP_EXECUTABLE_PATH stp LOCATION)
+-else()
+-    get_target_property(STP_EXECUTABLE_PATH stp_simple LOCATION)
+-endif()
++get_target_property(STP_EXECUTABLE_PATH stp LOCATION)
+ 
+ # Create llvm-lit configuration file
+ configure_file(lit.site.cfg.in lit.site.cfg @ONLY)
+ 
+-if (Boost_FOUND)
+-    add_custom_target(query-file-tests
+-                  DEPENDS stp
+-                  COMMAND ${PYTHON_EXECUTABLE}
+-                          ${LIT_TOOL} ${LIT_ARGS} .
++add_custom_target(query-file-tests
++    DEPENDS stp
++    COMMAND ${PYTHON_EXECUTABLE}
++    ${LIT_TOOL} ${LIT_ARGS} .
+     )
+-else()
+-    add_custom_target(query-file-tests
+-                  DEPENDS stp_simple
+-                  COMMAND ${PYTHON_EXECUTABLE}
+-                          ${LIT_TOOL} ${LIT_ARGS} .
+-    )
+-endif()
+ 
+ # Make sure this test-suite runs when "check" is target
+-add_dependencies(check query-file-tests)
+\ No newline at end of file
++add_dependencies(check query-file-tests)
+--- a/tools/CMakeLists.txt
++++ b/tools/CMakeLists.txt
+@@ -1,4 +1,8 @@
+-# AUTHORS: Dan Liew, Ryan Gvostes, Mate Soos
++# Copyright (c)
++#     2015 Dan Liew
++#     2015 Ryan Gvostes
++#     2015 Mate Soos
++#     2015 Marko Dimjašević
+ #
+ # Permission is hereby granted, free of charge, to any person obtaining a copy
+ # of this software and associated documentation files (the "Software"), to deal
+@@ -19,7 +23,6 @@
+ # THE SOFTWARE.
+ 
+ add_subdirectory(stp)
+-add_subdirectory(stp_simple)
+ 
+ option(BUILD_EXTRA_TOOLS "Build extra tools" ON)
+ if (BUILD_EXTRA_TOOLS)
+--- a/tools/stp/CMakeLists.txt
++++ b/tools/stp/CMakeLists.txt
+@@ -1,4 +1,8 @@
+-# AUTHORS: Dan Liew, Ryan Gvostes, Mate Soos
++# Copyright (c)
++#     2015 Dan Liew
++#     2015 Ryan Gvostes
++#     2015 Mate Soos
++#     2015 Marko Dimjašević
+ #
+ # Permission is hereby granted, free of charge, to any person obtaining a copy
+ # of this software and associated documentation files (the "Software"), to deal
+@@ -30,24 +34,22 @@
+     set(CMAKE_EXE_LINKER_FLAGS "-pthread ${CMAKE_EXE_LINKER_FLAGS}")
+ endif()
+ 
+-if (Boost_FOUND)
+-    add_executable(stp
+-        main.cpp
+-        main_common.cpp
+-        STPProgramGlobals.cpp
++add_executable(stp
++    main.cpp
++    main_common.cpp
++    STPProgramGlobals.cpp
+     )
+-    if (BUILD_STATIC_BIN)
+-        set_target_properties(stp PROPERTIES LINK_SEARCH_END_STATIC 1)
+-        set_target_properties(stp PROPERTIES LINK_SEARCH_START_STATIC 0)
+-    endif()
++if (BUILD_STATIC_BIN)
++    set_target_properties(stp PROPERTIES LINK_SEARCH_END_STATIC 1)
++    set_target_properties(stp PROPERTIES LINK_SEARCH_START_STATIC 0)
++endif()
+ 
+-    set_target_properties(stp PROPERTIES
+-      RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}"
+-      VERSION "${PROJECT_VERSION}"
++set_target_properties(stp PROPERTIES
++    RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}"
+     )
+-    target_link_libraries(stp libstp)
+-    install(TARGETS stp
+-        EXPORT ${STP_EXPORT_NAME}
+-        RUNTIME DESTINATION bin
++target_link_libraries(stp libstp)
++
++install(TARGETS stp
++    EXPORT ${STP_EXPORT_NAME}
++    RUNTIME DESTINATION bin
+     )
+-endif()
+--- a/tools/stp_simple/CMakeLists.txt
++++ /dev/null
+@@ -1,50 +0,0 @@
+-# AUTHORS: Dan Liew, Ryan Gvostes, Mate Soos
+-#
+-# Permission is hereby granted, free of charge, to any person obtaining a copy
+-# of this software and associated documentation files (the "Software"), to deal
+-# in the Software without restriction, including without limitation the rights
+-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+-# copies of the Software, and to permit persons to whom the Software is
+-# furnished to do so, subject to the following conditions:
+-#
+-# The above copyright notice and this permission notice shall be included in
+-# all copies or substantial portions of the Software.
+-#
+-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+-# THE SOFTWARE.
+-
+-# -----------------------------------------------------------------------------
+-# Create binary
+-# -----------------------------------------------------------------------------
+-if (BUILD_STATIC_BIN)
+-    # FIXME: We should check if the linker supports these flags
+-    # FIXME: -Wl,--no-export-dynamic is a workaround for a bug in binutils
+-    # See http://sourceware.org/bugzilla/show_bug.cgi?id=13490
+-    # https://bugzilla.redhat.com/show_bug.cgi?id=642999
+-    set(CMAKE_EXE_LINKER_FLAGS "-static -Wl,--no-export-dynamic")
+-    set(CMAKE_EXE_LINKER_FLAGS "-pthread ${CMAKE_EXE_LINKER_FLAGS}")
+-endif()
+-
+-add_executable(stp_simple
+-    main_simple.cpp
+-    ../stp/main_common.cpp
+-    ../stp/STPProgramGlobals.cpp
+-)
+-
+-if (BUILD_STATIC_BIN)
+-    set_target_properties(stp_simple PROPERTIES LINK_SEARCH_END_STATIC 1)
+-    set_target_properties(stp_simple PROPERTIES LINK_SEARCH_START_STATIC 0)
+-endif()
+-
+-set_target_properties(stp_simple PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
+-target_link_libraries(stp_simple libstp)
+-
+-install(TARGETS stp_simple
+-        EXPORT ${STP_EXPORT_NAME}
+-        RUNTIME DESTINATION bin
+-)
+--- a/tools/stp_simple/main_simple.cpp
++++ /dev/null
+@@ -1,56 +0,0 @@
+-/********************************************************************
+- * AUTHORS: Mate Soos
+- *
+- * BEGIN DATE: Nov, 2014
+- *
+-Permission is hereby granted, free of charge, to any person obtaining a copy
+-of this software and associated documentation files (the "Software"), to deal
+-in the Software without restriction, including without limitation the rights
+-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+-copies of the Software, and to permit persons to whom the Software is
+-furnished to do so, subject to the following conditions:
+-
+-The above copyright notice and this permission notice shall be included in
+-all copies or substantial portions of the Software.
+-
+-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+-THE SOFTWARE.
+-********************************************************************/
+-
+-#include "../stp/main_common.h"
+-
+-#include <iostream>
+-
+-class SimpleMain : public Main
+-{
+-public:
+-  virtual int create_and_parse_options(int argc, char** argv);
+-};
+-
+-int SimpleMain::create_and_parse_options(int argc, char** argv)
+-{
+-  if (argc > 2)
+-  {
+-    std::cerr << "Only one option is allowed, the input file" << std::endl;
+-    exit(0);
+-  }
+-
+-  if (argc > 1)
+-  {
+-    infile = argv[1];
+-    check_infile_type();
+-  }
+-
+-  return 0;
+-}
+-
+-int main(int argc, char** argv)
+-{
+-  SimpleMain main;
+-  return main.main(argc, argv);
+-}
+\ No newline at end of file

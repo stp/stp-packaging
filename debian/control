@@ -1,0 +1,29 @@
+Source: stp
+Section: science
+Priority: optional
+Maintainer: Marko Dimjašević <marko@dimjasevic.net>
+Build-Depends: debhelper (>= 9), cmake, zlib1g-dev, libboost-program-options-dev, libboost-system-dev, flex, bison, minisat, llvm-3.5-tools, libgtest-dev, python
+Standards-Version: 3.9.6
+Homepage: https://stp.github.io/
+Vcs-Git: git://github.com/stp/stp.git
+Vcs-Browser: https://github.com/stp/stp
+
+Package: stp
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Simple theorem prover
+ STP is a constraint solver that can solve many kinds of
+ problems including those by program analysis tools, theorem
+ provers, automated bug finders, cryptographic algorithms,
+ intelligent fuzzers and model checkers.
+
+Package: python-stp
+Architecture: any
+Depends: stp (= ${binary:Version}), python, ${shlibs:Depends}, ${misc:Depends}
+Description: Simple theorem prover library bindgings for Python 
+ STP is a constraint solver that can solve many kinds of
+ problems including those by program analysis tools, theorem
+ provers, automated bug finders, cryptographic algorithms,
+ intelligent fuzzers and model checkers.
+ .
+ This package contains library bindings for Python.

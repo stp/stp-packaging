@@ -1,0 +1,8 @@
+stp for Debian
+--------------
+
+There are three files in the PDF format that were removed from the
+source. They are research papers on the Simple Theorem Prover, which
+can be found at https://github.com/stp/stp/tree/2.1.1/papers.
+
+ -- Marko Dimjašević <marko@dimjasevic.net>  Fri, 02 Oct 2015 20:30:34 -0600

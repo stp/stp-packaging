@@ -1,0 +1,7 @@
+stp (2.1.1+dfsg-1) unstable; urgency=low
+
+  * Initial release (Closes: #789055)
+  * Included OutputCheck from a Git commit e0f533d3c5
+  * Applied a patch that reorganizes executables
+
+ -- Marko Dimjašević <marko@dimjasevic.net>  Fri, 02 Oct 2015 20:30:34 -0600
